@@ -1,0 +1,44 @@
+// Question 1:
+
+// Objective: Retrieve all documents where title contains the word Development and display only with fields: _id and title
+
+db.books1.aggregate([
+    {$match:{"title":{$regex:"Development"}}}
+    ,
+    {
+        $project:{
+            "_id": 1,
+            "title": 1
+        }
+    }
+])
+
+// Question 2:
+// Objective: Retrieve all documents where title contains the word Development and order by pageCount. Display only fields title and pageCount
+
+db.books1.aggregate([
+    {$match:{"title":{$regex:"development",$options:"i"}}},
+    {$sort:{"pageCount":1}},
+    {$project:{"_id":0,"title":1,"pageCount":1}}
+])
+
+// Question 3:
+// Objective: Count the total number of books based on categories
+
+db.books.aggregate([
+    {
+        $unwind: "$categories"
+    },
+    {
+        $group: {
+        "_id": "$categories",
+        "count": {$sum:1}
+        }
+    },
+    {
+        $sort: {"count": 1}
+    }
+])
+
+//remember that $group require "_id": and "$categories" here needs "".
+//Tested to be correct with the Db
