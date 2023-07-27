@@ -2,7 +2,7 @@
 
 // Objective: Retrieve all documents where title contains the word Development and display only with fields: _id and title
 
-db.books1.aggregate([
+db.books.aggregate([
     {$match:{"title":{$regex:"Development"}}}
     ,
     {
@@ -16,7 +16,7 @@ db.books1.aggregate([
 // Question 2:
 // Objective: Retrieve all documents where title contains the word Development and order by pageCount. Display only fields title and pageCount
 
-db.books1.aggregate([
+db.books.aggregate([
     {$match:{"title":{$regex:"development",$options:"i"}}},
     {$sort:{"pageCount":1}},
     {$project:{"_id":0,"title":1,"pageCount":1}}
@@ -40,5 +40,11 @@ db.books.aggregate([
     }
 ])
 
-//remember that $group require "_id": and "$categories" here needs "".
-//Tested to be correct with the Db
+// remember that $group require "_id": and "$categories" here needs "".
+// Tested to be correct with the Db
+// it is "$categories" not "categories" because $ creates reference to the needed field
+// specify $unwind: "$categories", it tells MongoDB to take the "categories" field in each document and unwind its contents, effectively creating a new document for each element of the "categories" array. This is called array expansion or array deconstruction.
+// if you used "categories" without the dollar sign, MongoDB would interpret it as a constant value rather than a reference to a field in the document. 
+// similar for $group, because we are referencing the field
+
+
